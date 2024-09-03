@@ -36,12 +36,15 @@ const AddUser = () => {
 
   return (
     <Container sx={{ padding: "16px" }}>
-      <Typography variant="h4">Add User</Typography>
+      <Typography variant="h5" align="center">
+        Add User
+      </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           label="Name"
           variant="outlined"
           margin="normal"
+          fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -49,6 +52,7 @@ const AddUser = () => {
           label="Email"
           variant="outlined"
           margin="normal"
+          fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -56,6 +60,7 @@ const AddUser = () => {
           label="Phone"
           variant="outlined"
           margin="normal"
+          fullWidth
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />

@@ -36,7 +36,9 @@ const ClientList = () => {
 
   return (
     <Container sx={{ padding: "16px" }}>
-      <Typography variant="h4">Clients</Typography>
+      <Typography variant="h5" align="center">
+        Clients
+      </Typography>
       <Button
         variant="contained"
         color="primary"

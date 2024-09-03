@@ -42,10 +42,13 @@ const EditClient = () => {
 
   return (
     <Container sx={{ padding: "16px" }}>
-      <Typography variant="h4">Edit Client</Typography>
+      <Typography variant="h5" align="center">
+        Edit Client
+      </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           margin="normal"
+          fullWidth
           label="Name"
           name="name"
           value={clientData.name}
@@ -53,6 +56,7 @@ const EditClient = () => {
         />
         <TextField
           margin="normal"
+          fullWidth
           label="Industry"
           name="industry"
           value={clientData.industry}
@@ -60,6 +64,7 @@ const EditClient = () => {
         />
         <TextField
           margin="normal"
+          fullWidth
           label="Contact Info"
           name="contactInfo"
           value={clientData.contactInfo}

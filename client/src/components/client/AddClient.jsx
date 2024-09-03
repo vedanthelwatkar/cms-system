@@ -33,7 +33,9 @@ const AddClient = () => {
 
   return (
     <Container sx={{ padding: "16px" }}>
-      <Typography variant="h4">Add Client</Typography>
+      <Typography variant="h5" align="center">
+        Add Client
+      </Typography>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <TextField
@@ -42,6 +44,7 @@ const AddClient = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           margin="normal"
+          fullWidth
           required
         />
         <TextField
@@ -50,6 +53,7 @@ const AddClient = () => {
           value={industry}
           onChange={(e) => setIndustry(e.target.value)}
           margin="normal"
+          fullWidth
           required
         />
         <TextField
@@ -58,6 +62,7 @@ const AddClient = () => {
           value={contactInfo}
           onChange={(e) => setContactInfo(e.target.value)}
           margin="normal"
+          fullWidth
           required
         />
         <Box

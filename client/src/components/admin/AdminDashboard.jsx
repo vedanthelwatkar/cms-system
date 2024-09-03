@@ -15,11 +15,7 @@ import { useEffect } from "react";
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
-  const { admins, status, error } = useSelector((state) => state.admins);
-
-  useEffect(() => {
-    dispatch(fetchAdmins());
-  }, [dispatch]);
+  const { admins, status, error } = useSelector((state) => state.admin);
 
   if (status === "loading") return <div>Loading...</div>;
   if (status === "failed") return <div>{error}</div>;
@@ -34,7 +30,7 @@ const AdminDashboard = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {admins.map((admin) => (
+          {admins?.map((admin) => (
             <TableRow key={admin._id}>
               <TableCell>{admin.username}</TableCell>
               <TableCell>

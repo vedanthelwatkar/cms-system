@@ -42,10 +42,13 @@ const EditUser = () => {
 
   return (
     <Container sx={{ padding: "16px" }}>
-      <Typography variant="h4">Edit User</Typography>
+      <Typography variant="h5" align="center">
+        Edit User
+      </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           margin="normal"
+          fullWidth
           label="Name"
           name="name"
           value={userData.name}
@@ -53,6 +56,7 @@ const EditUser = () => {
         />
         <TextField
           margin="normal"
+          fullWidth
           label="Email"
           name="email"
           value={userData.email}
@@ -60,6 +64,7 @@ const EditUser = () => {
         />
         <TextField
           margin="normal"
+          fullWidth
           label="Phone"
           name="phone"
           value={userData.phone}

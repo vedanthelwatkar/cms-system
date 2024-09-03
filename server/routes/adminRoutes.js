@@ -1,40 +1,49 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const Admin = require("../models/Admin");
 
-router.post("/admin/register", async (req, res) => {
+// Admin Login
+router.post("/admin/login", async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const admin = new Admin(req.body);
-    await admin.save();
-    res.status(201).json({ success: true, data: admin });
+    const admin = await Admin.findOne({ username });
+    if (!admin || admin.password !== password) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
+    }
+    res.status(200).json({ success: true, message: "Login successful" });
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
-router.post("/admin/login", async (req, res) => {
+// Admin Logout
+router.post("/admin/logout", (req, res) => {
+  // Logic to handle logout, e.g., clearing sessions
+  res.status(200).json({ success: true, message: "Logout successful" });
+});
+
+router.post("/admin/register", async (req, res) => {
+  const { email, password } = req.body; // Ensure `email` and `password` are extracted from request body
+
   try {
-    const { username, password } = req.body;
-    const admin = await Admin.findOne({ username });
-    if (!admin)
+    // Check if the admin already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
       return res
         .status(400)
-        .json({ success: false, message: "Invalid credentials" });
+        .json({ success: false, message: "Admin already exists" });
+    }
 
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch)
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
+    // Create a new admin
+    const newAdmin = new Admin({ email, password });
+    await newAdmin.save();
 
-    const token = jwt.sign(
-      { id: admin._id, role: "admin" },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.status(200).json({ success: true, token });
+    res
+      .status(201)
+      .json({ success: true, message: "Admin created successfully" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

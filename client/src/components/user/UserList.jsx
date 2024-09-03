@@ -38,7 +38,9 @@ const UserList = () => {
 
   return (
     <Container sx={{ padding: "16px" }}>
-      <Typography variant="h4">Users for Client {clientId}</Typography>
+      <Typography variant="h5" align="center">
+        Users for Client {clientId}
+      </Typography>
       <Box
         sx={{
           display: "flex",

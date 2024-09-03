@@ -3,9 +3,17 @@ import axios from "axios";
 import { appConfig } from "../../appConfig";
 
 // Thunks
-export const fetchAdmins = createAsyncThunk("fetchAdmins", async () => {
-  const response = await axios.get(`${appConfig.BASE_URL}/api/admin`);
-  return response.data.data;
+export const adminLogin = createAsyncThunk("adminLogin", async (loginData) => {
+  const response = await axios.post(
+    `${appConfig.BASE_URL}/api/admin/login`,
+    loginData
+  );
+  return response.data.message;
+});
+
+export const adminLogout = createAsyncThunk("adminLogout", async () => {
+  const response = await axios.post(`${appConfig.BASE_URL}/api/admin/logout`);
+  return response.data.message;
 });
 
 export const addAdmin = createAsyncThunk("addAdmin", async (adminData) => {
@@ -13,45 +21,41 @@ export const addAdmin = createAsyncThunk("addAdmin", async (adminData) => {
     `${appConfig.BASE_URL}/api/admin/register`,
     adminData
   );
-  return response.data.data;
+  return response.data;
 });
 
-export const adminLogin = createAsyncThunk("adminLogin", async (loginData) => {
-  const response = await axios.post(
-    `${appConfig.BASE_URL}/api/admin/login`,
-    loginData
-  );
-  return response.data.token;
-});
-
-// Slice
+// Slice definition
 const adminSlice = createSlice({
-  name: "admins",
+  name: "admin",
   initialState: {
-    admins: [],
-    token: null,
-    status: "idle",
+    loginStatus: "idle",
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAdmins.pending, (state) => {
-        state.status = "loading";
+      .addCase(adminLogin.pending, (state) => {
+        state.loginStatus = "loading";
       })
-      .addCase(fetchAdmins.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.admins = action.payload;
+      .addCase(adminLogin.fulfilled, (state) => {
+        state.loginStatus = "succeeded";
       })
-      .addCase(fetchAdmins.rejected, (state, action) => {
-        state.status = "failed";
+      .addCase(adminLogin.rejected, (state, action) => {
+        state.loginStatus = "failed";
+        state.error = action.error;
+      })
+      .addCase(adminLogout.fulfilled, (state) => {
+        state.loginStatus = "idle";
+      })
+      .addCase(addAdmin.pending, (state) => {
+        state.createStatus = "loading";
+      })
+      .addCase(addAdmin.fulfilled, (state) => {
+        state.createStatus = "succeeded";
+      })
+      .addCase(addAdmin.rejected, (state, action) => {
+        state.createStatus = "failed";
         state.error = action.error.message;
-      })
-      .addCase(addAdmin.fulfilled, (state, action) => {
-        state.admins.push(action.payload);
-      })
-      .addCase(adminLogin.fulfilled, (state, action) => {
-        state.token = action.payload;
       });
   },
 });
