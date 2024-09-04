@@ -13,12 +13,16 @@ import {
   Paper,
   Container,
   Typography,
+  Tooltip,
+  Box,
 } from "@mui/material";
+import { adminLogout } from "../../redux/slices/adminSlice";
 
 const ClientList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { clients, status } = useSelector((state) => state.clients);
+  const isAdmin = sessionStorage.getItem("Admin");
 
   useEffect(() => {
     if (status === "idle") {
@@ -34,19 +38,42 @@ const ClientList = () => {
     navigate(`/users/${clientId}`);
   };
 
+  const handleAdminLogout = () => {
+    sessionStorage.removeItem("Admin");
+    dispatch(adminLogout());
+    setTimeout(() => {
+      navigate("/admin/login");
+    }, 200);
+  };
+
+  const handleAdminLogin = () => {
+    sessionStorage.removeItem("Admin");
+    navigate("/admin/login");
+  };
+
   return (
     <Container sx={{ padding: "16px" }}>
       <Typography variant="h5" align="center">
         Clients
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigate(`/clients/add`)}
-        style={{ marginBottom: "16px" }}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
       >
-        Add Client
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate(`/clients/add`)}
+          style={{
+            marginBottom: "16px",
+            marginTop: "30px",
+          }}
+        >
+          Add Client
+        </Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -64,25 +91,47 @@ const ClientList = () => {
                 <TableCell>{client.industry}</TableCell>
                 <TableCell>{client.contactInfo}</TableCell>
                 <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="warning"
-                    onClick={() => navigate(`/clients/edit/${client._id}`)}
-                    style={{ marginRight: "8px" }}
+                  <Tooltip
+                    title={
+                      !isAdmin ? "Login as admin to access this action" : ""
+                    }
+                    arrow
+                    disableHoverListener={isAdmin}
                   >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleDelete(client._id)}
+                    <span>
+                      <Button
+                        variant="outlined"
+                        color="warning"
+                        onClick={() => navigate(`/clients/edit/${client._id}`)}
+                        style={{ marginRight: "8px", cursor: "pointer" }}
+                        disabled={!isAdmin}
+                      >
+                        Edit
+                      </Button>
+                    </span>
+                  </Tooltip>
+                  <Tooltip
+                    title={
+                      !isAdmin ? "Login as admin to access this action" : ""
+                    }
+                    arrow
+                    disableHoverListener={isAdmin}
                   >
-                    Delete
-                  </Button>
+                    <span>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleDelete(client._id)}
+                        disabled={!isAdmin}
+                      >
+                        Delete
+                      </Button>
+                    </span>
+                  </Tooltip>
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={() => handleViewUsers(client._id)}
+                    onClick={() => handleViewUsers(client._id, client.name)}
                     style={{ marginLeft: "8px" }}
                   >
                     View Users
@@ -93,6 +142,21 @@ const ClientList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {isAdmin ? (
+        <Button
+          sx={{ position: "absolute", top: "10px", right: "10px" }}
+          onClick={() => handleAdminLogout()}
+        >
+          Admin Logout
+        </Button>
+      ) : (
+        <Button
+          sx={{ position: "absolute", top: "10px", right: "10px" }}
+          onClick={() => handleAdminLogin()}
+        >
+          Admin Login
+        </Button>
+      )}
     </Container>
   );
 };

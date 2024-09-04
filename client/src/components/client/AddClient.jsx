@@ -1,16 +1,8 @@
-// src/components/client/AddClient.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addClient } from "../../redux/slices/clientSlice";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Box,
-  Paper,
-} from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 const AddClient = () => {
   const dispatch = useDispatch();
@@ -24,8 +16,8 @@ const AddClient = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(addClient({ name, industry, contactInfo })).unwrap();
-      navigate("/clients"); // Redirect to client list page after adding
+      dispatch(addClient({ name, industry, contactInfo }));
+      navigate("/clients");
     } catch (error) {
       setError(error.message || "Failed to add client");
     }
@@ -69,11 +61,12 @@ const AddClient = () => {
           sx={{
             display: "flex",
             gap: "10px",
+            justifyContent: "flex-end",
             marginTop: "10px",
           }}
         >
           <Button variant="contained" color="primary" type="submit">
-            Add Client
+            Submit
           </Button>
           <Button
             variant="contained"

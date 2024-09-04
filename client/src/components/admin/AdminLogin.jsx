@@ -21,6 +21,7 @@ const AdminLogin = () => {
   useEffect(() => {
     if (loginStatus === "succeeded") {
       navigate("/admin");
+      sessionStorage.setItem("Admin", "true");
     } else if (loginStatus === "failed") {
       console.log("Login failed:", error.message);
     }
@@ -62,6 +63,12 @@ const AdminLogin = () => {
         sx={{ mt: 2 }}
       >
         Login
+      </Button>
+      <Button
+        sx={{ position: "absolute", top: "10px", right: "10px" }}
+        onClick={() => navigate("/clients")}
+      >
+        Clients
       </Button>
     </Box>
   );

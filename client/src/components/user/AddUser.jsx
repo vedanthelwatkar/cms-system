@@ -2,14 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { addUser } from "../../redux/slices/userSlice";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Paper,
-  Box,
-} from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 const AddUser = () => {
   const [name, setName] = useState("");
@@ -27,7 +20,7 @@ const AddUser = () => {
       return;
     }
     try {
-      await dispatch(addUser({ name, email, phone, clientId }));
+      dispatch(addUser({ name, email, phone, clientId }));
       navigate(`/users/${clientId}`);
     } catch (err) {
       setError("Failed to add user");
@@ -62,6 +55,7 @@ const AddUser = () => {
           margin="normal"
           fullWidth
           value={phone}
+          type="number"
           onChange={(e) => setPhone(e.target.value)}
         />
         {error && <Typography color="error">{error}</Typography>}
@@ -69,11 +63,12 @@ const AddUser = () => {
           sx={{
             display: "flex",
             gap: "10px",
+            justifyContent: "flex-end",
             marginTop: "10px",
           }}
         >
           <Button type="submit" variant="contained" color="primary">
-            Add User
+            Submit
           </Button>
           <Button
             variant="contained"

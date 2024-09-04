@@ -55,6 +55,12 @@ const AdminCreate = () => {
       >
         Create Admin
       </Button>
+      <Button
+        sx={{ position: "absolute", top: "10px", right: "10px" }}
+        onClick={() => navigate("/clients")}
+      >
+        Clients
+      </Button>
     </Box>
   );
 };

@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { updateClient } from "../../redux/slices/clientSlice";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Paper,
-  Box,
-} from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 const EditClient = () => {
   const dispatch = useDispatch();
@@ -75,6 +68,7 @@ const EditClient = () => {
             display: "flex",
             gap: "10px",
             marginTop: "10px",
+            justifyContent: "flex-end",
           }}
         >
           <Button type="submit" variant="contained" color="primary">

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { appConfig } from "../../appConfig";
 
-// Thunks
 export const fetchClients = createAsyncThunk("fetchClients", async () => {
   const response = await axios.get(`${appConfig.BASE_URL}/api/clients`);
   return response.data.data;
@@ -32,7 +31,6 @@ export const deleteClient = createAsyncThunk("deleteClient", async (id) => {
   return id;
 });
 
-// Slice
 const clientSlice = createSlice({
   name: "clients",
   initialState: {

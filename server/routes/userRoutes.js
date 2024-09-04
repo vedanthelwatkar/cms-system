@@ -14,9 +14,8 @@ router.post("/users", async (req, res) => {
 
 router.get("/users", async (req, res) => {
   try {
-    const { clientId } = req.query; // Get clientId from query parameters
+    const { clientId } = req.query;
 
-    // If clientId is provided, filter users by clientId
     const filter = clientId ? { clientId } : {};
     const users = await User.find(filter);
 

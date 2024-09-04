@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { appConfig } from "../../appConfig";
 
-// Thunks
 export const fetchUsers = createAsyncThunk("fetchUsers", async (clientId) => {
   const response = await axios.get(
     `${appConfig.BASE_URL}/api/users?clientId=${clientId}`
@@ -34,7 +33,6 @@ export const deleteUser = createAsyncThunk("deleteUser", async (id) => {
   return id;
 });
 
-// Slice
 const userSlice = createSlice({
   name: "users",
   initialState: {
@@ -47,6 +45,7 @@ const userSlice = createSlice({
     builder
       .addCase(fetchUsers.pending, (state) => {
         state.status = "loading";
+        state.users = [];
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.status = "succeeded";

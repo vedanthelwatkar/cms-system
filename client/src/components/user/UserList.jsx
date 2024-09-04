@@ -15,18 +15,18 @@ import {
   Container,
   Box,
 } from "@mui/material";
+import { adminLogout } from "../../redux/slices/adminSlice";
 
 const UserList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { clientId } = useParams();
-  const { users, status } = useSelector((state) => state.users);
+  const { users } = useSelector((state) => state.users);
+  const isAdmin = sessionStorage.getItem("Admin");
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchUsers(clientId));
-    }
-  }, [dispatch, status, clientId]);
+    dispatch(fetchUsers(clientId));
+  }, [dispatch, clientId]);
 
   const handleDelete = (id) => {
     dispatch(deleteUser(id));
@@ -34,6 +34,19 @@ const UserList = () => {
 
   const handleEdit = (user) => {
     navigate(`/users/${clientId}/edit/${user._id}`, { state: { user } });
+  };
+
+  const handleAdminLogout = () => {
+    sessionStorage.removeItem("Admin");
+    dispatch(adminLogout());
+    setTimeout(() => {
+      navigate("/admin/login");
+    }, 200);
+  };
+
+  const handleAdminLogin = () => {
+    sessionStorage.removeItem("Admin");
+    navigate("/admin/login");
   };
 
   return (
@@ -45,13 +58,18 @@ const UserList = () => {
         sx={{
           display: "flex",
           gap: "10px",
+          justifyContent: "flex-end",
         }}
       >
         <Button
           variant="contained"
           color="primary"
           onClick={() => navigate(`/users/${clientId}/add`)}
-          style={{ marginBottom: "16px" }}
+          style={{
+            marginBottom: "16px",
+            justifyContent: "flex-end",
+            marginTop: "30px",
+          }}
         >
           Add User
         </Button>
@@ -59,7 +77,11 @@ const UserList = () => {
           variant="contained"
           color="primary"
           onClick={() => navigate(`/clients`)}
-          style={{ marginBottom: "16px" }}
+          style={{
+            marginBottom: "16px",
+            justifyContent: "flex-end",
+            marginTop: "30px",
+          }}
         >
           Go Back
         </Button>
@@ -86,6 +108,7 @@ const UserList = () => {
                     color="warning"
                     onClick={() => handleEdit(user)}
                     style={{ marginRight: "8px" }}
+                    disabled={!isAdmin}
                   >
                     Edit
                   </Button>
@@ -93,6 +116,7 @@ const UserList = () => {
                     variant="outlined"
                     color="error"
                     onClick={() => handleDelete(user._id)}
+                    disabled={!isAdmin}
                   >
                     Delete
                   </Button>
@@ -102,6 +126,21 @@ const UserList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {isAdmin ? (
+        <Button
+          sx={{ position: "absolute", top: "10px", right: "10px" }}
+          onClick={() => handleAdminLogout()}
+        >
+          Admin Logout
+        </Button>
+      ) : (
+        <Button
+          sx={{ position: "absolute", top: "10px", right: "10px" }}
+          onClick={() => handleAdminLogin()}
+        >
+          Admin Login
+        </Button>
+      )}
     </Container>
   );
 };

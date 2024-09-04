@@ -2,14 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { updateUser } from "../../redux/slices/userSlice";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Paper,
-  Box,
-} from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 const EditUser = () => {
   const dispatch = useDispatch();
@@ -67,6 +60,7 @@ const EditUser = () => {
           fullWidth
           label="Phone"
           name="phone"
+          type="number"
           value={userData.phone}
           onChange={handleChange}
         />
@@ -74,6 +68,7 @@ const EditUser = () => {
           sx={{
             display: "flex",
             gap: "10px",
+            justifyContent: "flex-end",
             marginTop: "10px",
           }}
         >
