@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { updateClient } from "../../redux/slices/clientSlice";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
 
 const EditClient = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { client } = location.state || {};
+  const { id } = useParams();
 
   const [clientData, setClientData] = useState({
     name: "",
@@ -16,21 +15,36 @@ const EditClient = () => {
     contactInfo: "",
   });
 
-  useEffect(() => {
-    if (client) {
-      setClientData(client);
-    }
-  }, [client]);
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
+
+  const validate = () => {
+    const newErrors = {};
+    if (clientData.name.length <= 2)
+      newErrors.name = "Name must be more than 2 characters";
+    if (clientData.industry.length <= 2)
+      newErrors.industry = "Industry must be more than 2 characters";
+    if (clientData.contactInfo.length <= 6)
+      newErrors.contactInfo = "Contact Info must be more than 6 characters";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setClientData({ ...clientData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateClient({ id: client._id, clientData }));
-    navigate("/clients");
+    if (validate()) {
+      try {
+        await dispatch(updateClient({ id, clientData })).unwrap();
+        navigate("/clients");
+      } catch (error) {
+        setApiError(error.message || "Failed to edit client");
+      }
+    }
   };
 
   return (
@@ -46,6 +60,8 @@ const EditClient = () => {
           name="name"
           value={clientData.name}
           onChange={handleChange}
+          error={Boolean(errors.name)}
+          helperText={errors.name}
         />
         <TextField
           margin="normal"
@@ -54,6 +70,8 @@ const EditClient = () => {
           name="industry"
           value={clientData.industry}
           onChange={handleChange}
+          error={Boolean(errors.industry)}
+          helperText={errors.industry}
         />
         <TextField
           margin="normal"
@@ -62,6 +80,8 @@ const EditClient = () => {
           name="contactInfo"
           value={clientData.contactInfo}
           onChange={handleChange}
+          error={Boolean(errors.contactInfo)}
+          helperText={errors.contactInfo}
         />
         <Box
           sx={{
@@ -83,6 +103,9 @@ const EditClient = () => {
           </Button>
         </Box>
       </form>
+      {apiError && (
+        <p style={{ color: "red", marginTop: "16px" }}>{apiError}</p>
+      )}
     </Container>
   );
 };

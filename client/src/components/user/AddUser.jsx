@@ -8,22 +8,33 @@ const AddUser = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { clientId } = useParams();
 
+  const validate = () => {
+    const newErrors = {};
+    if (name.length <= 2)
+      newErrors.name = "Name must be more than 2 characters";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "Email must be valid";
+    if (phone.length !== 10 || isNaN(phone))
+      newErrors.phone = "Phone number must be 10 digits";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !email || !phone) {
-      setError("All fields are required");
-      return;
-    }
-    try {
-      dispatch(addUser({ name, email, phone, clientId }));
-      navigate(`/users/${clientId}`);
-    } catch (err) {
-      setError("Failed to add user");
+    if (validate()) {
+      try {
+        await dispatch(addUser({ name, email, phone, clientId })).unwrap();
+        navigate(`/users/${clientId}`);
+      } catch (err) {
+        setApiError("Failed to add user");
+      }
     }
   };
 
@@ -40,6 +51,8 @@ const AddUser = () => {
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
+          error={Boolean(errors.name)}
+          helperText={errors.name}
         />
         <TextField
           label="Email"
@@ -48,6 +61,8 @@ const AddUser = () => {
           fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={Boolean(errors.email)}
+          helperText={errors.email}
         />
         <TextField
           label="Phone"
@@ -57,8 +72,14 @@ const AddUser = () => {
           value={phone}
           type="number"
           onChange={(e) => setPhone(e.target.value)}
+          error={Boolean(errors.phone)}
+          helperText={errors.phone}
         />
-        {error && <Typography color="error">{error}</Typography>}
+        {apiError && (
+          <Typography color="error" sx={{ marginTop: "16px" }}>
+            {apiError}
+          </Typography>
+        )}
         <Box
           sx={{
             display: "flex",
