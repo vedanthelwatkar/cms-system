@@ -38,10 +38,11 @@ router.get("/admin/metrics", async (req, res) => {
 });
 
 router.post("/admin/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const admin = await Admin.findOne({ username });
+    const admin = await Admin.findOne({ email });
+    console.log("admin: ", admin);
     if (!admin || admin.password !== password) {
       return res
         .status(401)
