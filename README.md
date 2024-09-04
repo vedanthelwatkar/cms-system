@@ -49,7 +49,7 @@ This web application allows for the management of clients and users with full CR
 
 ## Deployment
 
-- Deployed on [(https://cms-dashboard-system.vercel.app/)]
+- Deployed on [(https://dashboard-cms-seven.vercel.app/)]
 
 ## Demo
 
