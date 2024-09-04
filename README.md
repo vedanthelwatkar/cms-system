@@ -53,7 +53,7 @@ This web application allows for the management of clients and users with full CR
 
 ## Demo
 
-[https://github.com/user-attachments/assets/89287614-827b-4f10-8c03-974fa69804ad]
+https://github.com/user-attachments/assets/89287614-827b-4f10-8c03-974fa69804ad
 
 ## Evaluation
 
