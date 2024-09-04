@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addAdmin } from "../../redux/slices/adminSlice";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
@@ -9,15 +9,22 @@ const AdminCreate = () => {
   const navigate = useNavigate();
 
   const { createStatus, error } = useSelector((state) => state?.admin);
-  console.log("createStatus: ", createStatus);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     dispatch(addAdmin({ email, password }));
-    navigate("/admin/login");
   };
+
+  useEffect(() => {
+    if (createStatus === "succeeded") {
+      navigate("/admin/login");
+    } else if (createStatus === "failed") {
+      console.log("Admin creation failed:", error?.message);
+    }
+  }, [createStatus, error, navigate]);
 
   return (
     <Container
@@ -34,7 +41,7 @@ const AdminCreate = () => {
           flexDirection: "column",
         }}
         component="form"
-        onSubmit={handleSubmit()}
+        onSubmit={(e) => handleSubmit(e)}
       >
         <Typography variant="h5" align="center">
           Create Admin
@@ -59,7 +66,7 @@ const AdminCreate = () => {
         />
         {createStatus === "failed" && (
           <Typography color="error" align="center" variant="body2">
-            {error.message}
+            {error?.message || "Failed to create admin. Please try again."}
           </Typography>
         )}
         <Button
