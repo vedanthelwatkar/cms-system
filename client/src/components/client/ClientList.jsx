@@ -31,7 +31,13 @@ const ClientList = () => {
   }, [dispatch, status]);
 
   const handleDelete = (id) => {
-    dispatch(deleteClient(id));
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this client?"
+    );
+
+    if (confirmed) {
+      dispatch(deleteClient(id));
+    }
   };
 
   const handleViewUsers = (clientId) => {
